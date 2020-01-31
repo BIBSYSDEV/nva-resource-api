@@ -217,14 +217,14 @@ Resources:
   ModifyResource:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./modify_resource
+      CodeUri: ./resource_api/modify_resource
       Handler: app.handler
       Runtime: python3.7
       Events:
         PutEvent:
           Type: Api
           Properties:
-            Path: /{id}
+            Path: /{identifier}
             Method: PUT
             RestApiId: !Ref ResourceApi
       Environment:
