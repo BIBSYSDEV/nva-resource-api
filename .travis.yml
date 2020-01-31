@@ -4,9 +4,9 @@ python:
   - 3.8
 script:
   - pip install -r resource_api/requirements.txt
-  - python3 -m unittest discover resource_api/test
+  - python3 -m unittest discover resource_api/fetch_resource
   - pip3 install coverage
-  - python3 -m coverage run --source=./resource_api/test/ -m unittest discover
+  - python3 -m coverage run --source=./resource_api/fetch_resource/ -m unittest discover
   - coverage xml
   - pip3 install codacy-coverages
   - python-codacy-coverage -r coverage.xml

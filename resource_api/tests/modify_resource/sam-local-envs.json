@@ -1,0 +1,5 @@
+{
+  "DataPersistence": {
+    "TABLE_NAME": "nva-test"
+  }
+}

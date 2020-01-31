@@ -54,15 +54,14 @@ Resources:
                 passthroughBehavior: WHEN_NO_MATCH
               responses:
                 '200':
+                  description: OK
                   content:
                     application/json:
                       schema:
                         $ref: '#/components/schemas/Resource'
-          /{identifier}
+          /{identifier}:
             get:
               summary: Fetch Resource in Database.
-              security:
-                - CognitoUserPool: []
               parameters:
                 - in: path
                   name: identifier
@@ -71,12 +70,6 @@ Resources:
                     format: uuid
                   required: true
                   description: UUID identifier of the Resource to fetch.
-              requestBody:
-                required: true
-                content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/Resource'
               x-amazon-apigateway-integration:
                 uri:
                   Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FetchResource.Arn}/invocations
@@ -86,6 +79,7 @@ Resources:
                 passthroughBehavior: WHEN_NO_MATCH
               responses:
                 '200':
+                  description: OK
                   content:
                     application/json:
                       schema:
@@ -117,6 +111,7 @@ Resources:
                 passthroughBehavior: WHEN_NO_MATCH
               responses:
                 '200':
+                  description: OK
                   content:
                     application/json:
                       schema:
@@ -159,9 +154,11 @@ Resources:
                 status:
                   type: string
                 link:
-                  type: uri
+                  type: string
+                  format: uri
                 handle:
-                  type: uri
+                  type: string
+                  format: uri
                 publisher:
                   type: object
                 license:

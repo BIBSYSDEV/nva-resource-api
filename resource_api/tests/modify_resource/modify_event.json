@@ -1,0 +1,4 @@
+{
+  "httpMethod": "PUT",
+  "body":"{\"resource\": {\"metadata\": {\"titles\": {\"no\": \"En tittel\",\"en\": \"A title\"}}}}"
+}

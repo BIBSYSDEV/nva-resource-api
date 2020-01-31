@@ -13,13 +13,13 @@ phases:
       - pip3 install aws-sam-cli
 
       # Install project requirements
-      - pip3 install -r insert_resource/requirements.txt
+      - pip3 install -r resource_api/requirements.txt
 
   pre_build:
     commands:
 
-      # Discover and run unit tests in the 'test' directory. For more information, see <https://docs.python.org/3/library/unittest.html#test-discovery>
-      - python3 -m unittest discover insert_resource/test
+      # Discover and run unit tests in the 'fetch_resource' directory. For more information, see <https://docs.python.org/3/library/unittest.html#test-discovery>
+      - python3 -m unittest discover resource_api/tests
 
   build:
     commands:
