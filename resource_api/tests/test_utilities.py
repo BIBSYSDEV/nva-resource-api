@@ -9,8 +9,8 @@ import random
 import string
 import unittest
 
-from common.constants import Constants
-from common.helpers import response
+from resource_api.common.constants import Constants
+from resource_api.common.helpers import response
 
 class TestHandlerCase(unittest.TestCase):
 

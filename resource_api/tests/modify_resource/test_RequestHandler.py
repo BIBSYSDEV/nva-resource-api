@@ -12,8 +12,8 @@ import uuid
 import boto3
 from moto import mock_dynamodb2
 
-from common.constants import Constants
-from common.http_constants import HttpConstants
+from resource_api.common.constants import Constants
+from resource_api.common.http_constants import HttpConstants
 
 testdir = os.path.dirname(__file__)
 srcdir = '../'
@@ -128,7 +128,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_handler_modify_resource(self):
-        from modify_resource.main.RequestHandler import RequestHandler
+        from resource_api.modify_resource.main.RequestHandler import RequestHandler
         dynamodb = self.setup_mock_database('eu-west-1',
                                             'testing')
         request_handler = RequestHandler(dynamodb)
@@ -142,7 +142,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_handler_modify_resource_unknown_resource_identifier_in_event_body(self):
-        from modify_resource.main.RequestHandler import RequestHandler
+        from resource_api.modify_resource.main.RequestHandler import RequestHandler
         dynamodb = self.setup_mock_database('eu-west-1',
                                             'testing')
         request_handler = RequestHandler(dynamodb)
@@ -160,7 +160,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_handler_unknown_http_method_in_event(self):
-        from modify_resource.main.RequestHandler import RequestHandler
+        from resource_api.modify_resource.main.RequestHandler import RequestHandler
         dynamodb = self.setup_mock_database('eu-west-1',
                                             'testing')
         request_handler = RequestHandler(dynamodb)
@@ -174,7 +174,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_handler_missing_http_method_in_event_body(self):
-        from modify_resource.main.RequestHandler import RequestHandler
+        from resource_api.modify_resource.main.RequestHandler import RequestHandler
         dynamodb = self.setup_mock_database('eu-west-1',
                                             'testing')
         request_handler = RequestHandler(dynamodb)
@@ -188,7 +188,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_handler_missing_event(self):
-        from modify_resource import app
+        from resource_api.modify_resource import app
         dynamodb = self.setup_mock_database('eu-west-1',
                                             'testing')
         handler_modify_response = app.handler(None, None)
@@ -199,7 +199,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_app(self):
-        from modify_resource import app
+        from resource_api.modify_resource import app
         event = {
             "body": "{}"
         }
@@ -210,7 +210,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_app_event_empty_body(self):
-        from modify_resource import app
+        from resource_api.modify_resource import app
         event = {
             "httpMethod": "PUT",
             "body": ""
@@ -222,7 +222,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_app_event_invalid_json_in_body(self):
-        from modify_resource import app
+        from resource_api.modify_resource import app
         event = {
             "httpMethod": "PUT",
             "body": "{'fetch_resource': 'fetch_resource }"
@@ -235,7 +235,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_app_missing_env_region(self):
         del os.environ['REGION']
-        from modify_resource import app
+        from resource_api.modify_resource import app
         app.clear_dynamodb()
         resource = self.generate_mock_resource()
         _event = generate_mock_event(HttpConstants.HTTP_METHOD_PUT, resource)
@@ -247,7 +247,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_app_missing_env_table(self):
         del os.environ['TABLE_NAME']
-        from modify_resource import app
+        from resource_api.modify_resource import app
         app.clear_dynamodb()
         resource = self.generate_mock_resource()
         _event = generate_mock_event(HttpConstants.HTTP_METHOD_PUT, resource)

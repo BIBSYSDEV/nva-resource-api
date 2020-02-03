@@ -5,7 +5,7 @@ from common.constants import Constants
 from common.dynamo import DynamoDB
 from common.helpers import response
 
-from modify_resource.main.RequestHandler import RequestHandler
+from resource_api.modify_resource.main.RequestHandler import RequestHandler
 
 _dynamodb = None
 

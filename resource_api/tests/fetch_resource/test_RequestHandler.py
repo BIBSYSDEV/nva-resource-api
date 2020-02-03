@@ -8,8 +8,8 @@ import unittest
 import boto3
 from moto import mock_dynamodb2
 
-from common.http_constants import HttpConstants
-from common.constants import Constants
+from resource_api.common.http_constants import HttpConstants
+from resource_api.common.constants import Constants
 
 testdir = os.path.dirname(__file__)
 srcdir = '../'
@@ -72,7 +72,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_app(self):
-        from fetch_resource import app
+        from resource_api.fetch_resource import app
         _event = {}
         _handler_response = app.handler(_event, None)
         self.assertEqual(_handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
@@ -82,7 +82,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_app_missing_env_region(self):
         del os.environ['REGION']
-        from fetch_resource import app
+        from resource_api.fetch_resource import app
         _event = {
             Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_GET,
             Constants.EVENT_PATH_PARAMETERS: {Constants.EVENT_PATH_PARAMETER_IDENTIFIER: self.EXISTING_RESOURCE_IDENTIFIER},
@@ -95,7 +95,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_app_missing_env_table(self):
         del os.environ['TABLE_NAME']
-        from fetch_resource import app
+        from resource_api.fetch_resource import app
         _event = {
             Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_GET,
             Constants.EVENT_PATH_PARAMETERS: {Constants.EVENT_PATH_PARAMETER_IDENTIFIER: ''},
@@ -106,7 +106,7 @@ class TestHandlerCase(unittest.TestCase):
                          'HTTP Status code not 500')
 
     def test_handler_retrieve_resource_missing_event(self):
-        from fetch_resource.main.RequestHandler import RequestHandler
+        from resource_api.fetch_resource.main.RequestHandler import RequestHandler
         _dynamodb = self.setup_mock_database('eu-west-1',
                                             'testing')
         _request_handler = RequestHandler(_dynamodb)
@@ -120,7 +120,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_handler_retrieve_resource(self):
-        from fetch_resource.main.RequestHandler import RequestHandler
+        from resource_api.fetch_resource.main.RequestHandler import RequestHandler
         _dynamodb = self.setup_mock_database('eu-west-1',
                                              'testing')
         _request_handler = RequestHandler(_dynamodb)
@@ -139,7 +139,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_handler_retrieve_resource_wrong_http_method(self):
-        from fetch_resource.main.RequestHandler import RequestHandler
+        from resource_api.fetch_resource.main.RequestHandler import RequestHandler
         _dynamodb = self.setup_mock_database('eu-west-1',
                                              'testing')
         _request_handler = RequestHandler(_dynamodb)
@@ -158,7 +158,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_handler_retrieve_resource_not_found(self):
-        from fetch_resource.main.RequestHandler import RequestHandler
+        from resource_api.fetch_resource.main.RequestHandler import RequestHandler
         _dynamodb = self.setup_mock_database('eu-west-1',
                                              'testing')
         _request_handler = RequestHandler(_dynamodb)
@@ -177,7 +177,7 @@ class TestHandlerCase(unittest.TestCase):
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_handler_retrieve_resource_missing_resource_identifier(self):
-        from fetch_resource.main.RequestHandler import RequestHandler
+        from resource_api.fetch_resource.main.RequestHandler import RequestHandler
         _dynamodb = self.setup_mock_database('eu-west-1',
                                              'testing')
         _request_handler = RequestHandler(_dynamodb)
