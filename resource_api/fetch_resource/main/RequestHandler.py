@@ -4,10 +4,10 @@ import os
 
 from boto3.dynamodb.conditions import Key
 from boto3_type_annotations.dynamodb import Table
-from common.http_constants import HttpConstants
-from common.constants import Constants
+from resource_api.common.http_constants import HttpConstants
+from resource_api.common.constants import Constants
 
-from common.helpers import response
+from resource_api.common.helpers import response
 
 
 class RequestHandler:
