@@ -24,11 +24,11 @@ class RequestHandler:
 
     def modify_resource(self, modified_resource):
         ddb_response = self.table.query(
-            KeyConditionExpression=Key(Constants.DDB_FIELD_RESOURCE_IDENTIFIER).eq(
-                modified_resource[Constants.EVENT_RESOURCE_IDENTIFIER]))
+            KeyConditionExpression=Key(Constants.DDB_FIELD_IDENTIFIER).eq(
+                modified_resource[Constants.EVENT_IDENTIFIER]))
 
         if len(ddb_response[Constants.DDB_RESPONSE_ATTRIBUTE_NAME_ITEMS]) == 0:
-            raise ValueError('Resource with identifier ' + modified_resource[Constants.EVENT_RESOURCE_IDENTIFIER] + ' not found')
+            raise ValueError('Resource with identifier ' + modified_resource[Constants.EVENT_IDENTIFIER] + ' not found')
 
         ddb_response = self.table.put_item(Item=modified_resource)
         return ddb_response
@@ -51,7 +51,7 @@ class RequestHandler:
         if http_method == HttpConstants.HTTP_METHOD_PUT and body is not None:
             try:
                 ddb_response = self.modify_resource(body)
-                ddb_response[Constants.EVENT_RESOURCE_IDENTIFIER] = identifier
+                ddb_response[Constants.EVENT_IDENTIFIER] = identifier
                 return response(http.HTTPStatus.OK, json.dumps(ddb_response))
             except ValueError as e:
                 return response(http.HTTPStatus.BAD_REQUEST, e.args[0])

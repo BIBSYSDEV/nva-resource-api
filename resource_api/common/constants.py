@@ -11,7 +11,7 @@ class Constants:
     EVENT_HTTP_METHOD = 'httpMethod'
     EVENT_PATH_PARAMETERS = 'pathParameters'
     EVENT_PATH_PARAMETER_IDENTIFIER = 'identifier'
-    EVENT_RESOURCE_IDENTIFIER = 'identifier'
+    EVENT_IDENTIFIER = 'identifier'
 
     RESPONSE_STATUS_CODE = 'statusCode'
     RESPONSE_BODY = 'body'
@@ -22,7 +22,7 @@ class Constants:
     DDB_RESPONSE_ATTRIBUTE_NAME_RESPONSE_METADATA = 'ResponseMetadata'
     DDB_RESPONSE_ATTRIBUTE_NAME_RESPONSE_HTTP_STATUS_CODE = 'HTTPStatusCode'
 
-    DDB_FIELD_RESOURCE_IDENTIFIER = 'identifier'
+    DDB_FIELD_IDENTIFIER = 'identifier'
     DDB_FIELD_MODIFIED_DATE = 'modifiedDate'
     DDB_FIELD_CREATED_DATE = 'createdDate'
     DDB_FIELD_FILE_SET = 'fileSet'
@@ -63,14 +63,9 @@ class Constants:
         return 'identifier'
 
     @staticmethod
-    def event_resource_identifier():
-        """Returns the key for the resource identifier element of an event"""
-        return 'resource_identifier'
-
-    @staticmethod
-    def json_attribute_name_resource():
-        """Returns the JSON attribute name 'resource'"""
-        return 'resource'
+    def event_identifier():
+        """Returns the key for the identifier element of an event"""
+        return 'identifier'
 
     @staticmethod
     def response_status_code():
@@ -108,9 +103,9 @@ class Constants:
         return 'HTTPStatusCode'
 
     @staticmethod
-    def ddb_field_resource_identifier():
-        """Returns the NVA field name for resource identifier"""
-        return 'resource_identifier'
+    def ddb_field_identifier():
+        """Returns the NVA field name for identifier"""
+        return 'identifier'
 
     @staticmethod
     def ddb_field_modified_date():
@@ -123,14 +118,14 @@ class Constants:
         return 'createdDate'
 
     @staticmethod
-    def ddb_field_metadata():
-        """Returns the NVA field name for metadata"""
-        return 'metadata'
+    def ddb_field_entity_description():
+        """Returns the NVA field name for entity description"""
+        return 'entityDescription'
 
     @staticmethod
-    def ddb_field_files():
-        """Returns the NVA field name for files"""
-        return 'files'
+    def ddb_field_file_set():
+        """Returns the NVA field name for file set"""
+        return 'fileSet'
 
     @staticmethod
     def ddb_field_owner():

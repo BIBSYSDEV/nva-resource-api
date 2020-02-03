@@ -190,10 +190,10 @@ class TestHandlerCase(unittest.TestCase):
         self.assertEqual(handler_insert_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.CREATED,
                          'HTTP Status code not 201')
 
-        resource_identifier = resource_inserted[Constants.EVENT_RESOURCE_IDENTIFIER]
+        resource_identifier = resource_inserted[Constants.EVENT_IDENTIFIER]
 
         query_results = request_handler.get_table_connection().query(
-            KeyConditionExpression=Key(Constants.DDB_FIELD_RESOURCE_IDENTIFIER).eq(resource_identifier),
+            KeyConditionExpression=Key(Constants.DDB_FIELD_IDENTIFIER).eq(resource_identifier),
             ScanIndexForward=True
         )
 

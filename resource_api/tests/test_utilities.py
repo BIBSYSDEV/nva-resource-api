@@ -11,8 +11,6 @@ import unittest
 
 from resource_api.common.constants import Constants
 from resource_api.common.helpers import response
-from resource_api.common.encoders import encode_resource, encode_file_metadata, encode_files, encode_creator, \
-    encode_metadata
 
 class TestHandlerCase(unittest.TestCase):
 
@@ -29,14 +27,6 @@ class TestHandlerCase(unittest.TestCase):
     def test_helper_response(self):
         _response = response(http.HTTPStatus.OK, 'message')
         self.assertEqual(_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.OK)
-
-
-    def test_encoders_errors(self):
-        self.assertRaises(TypeError, encode_file_metadata, '')
-        self.assertRaises(TypeError, encode_files, '')
-        self.assertRaises(TypeError, encode_creator, '')
-        self.assertRaises(TypeError, encode_metadata, '')
-        self.assertRaises(TypeError, encode_resource, '')
 
 if __name__ == '__main__':
     unittest.main()
