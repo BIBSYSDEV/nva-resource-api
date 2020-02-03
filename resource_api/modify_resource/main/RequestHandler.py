@@ -34,18 +34,24 @@ class RequestHandler:
         return ddb_response
 
     def handler(self, event, context):
+        if event is None or Constants.EVENT_PATH_PARAMETERS not in event:
+            return response(http.HTTPStatus.BAD_REQUEST, Constants.ERROR_INSUFFICIENT_PARAMETERS)
+
+        if Constants.EVENT_PATH_PARAMETER_IDENTIFIER not in event[Constants.EVENT_PATH_PARAMETERS]:
+            return response(http.HTTPStatus.BAD_REQUEST, Constants.ERROR_INSUFFICIENT_PARAMETERS)
 
         try:
             body = json.loads(event[Constants.EVENT_BODY])
         except JSONDecodeError as e:
             return response(http.HTTPStatus.BAD_REQUEST, e.args[0])
 
+        identifier = event[Constants.EVENT_PATH_PARAMETERS][Constants.EVENT_PATH_PARAMETER_IDENTIFIER]
         http_method = event[Constants.EVENT_HTTP_METHOD]
 
         if http_method == HttpConstants.HTTP_METHOD_PUT and body is not None:
             try:
                 ddb_response = self.modify_resource(body)
-                ddb_response[Constants.EVENT_RESOURCE_IDENTIFIER] = body[Constants.EVENT_RESOURCE_IDENTIFIER]
+                ddb_response[Constants.EVENT_RESOURCE_IDENTIFIER] = identifier
                 return response(http.HTTPStatus.OK, json.dumps(ddb_response))
             except ValueError as e:
                 return response(http.HTTPStatus.BAD_REQUEST, e.args[0])

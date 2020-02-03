@@ -32,10 +32,10 @@ def remove_mock_database(dynamodb):
 def generate_mock_event(http_method, resource):
     body_value = json.dumps(resource)
     return {
-        'httpMethod': http_method,
-        'body': body_value
+        Constants.EVENT_HTTP_METHOD: http_method,
+        Constants.EVENT_BODY: body_value,
+        Constants.EVENT_PATH_PARAMETERS: {Constants.EVENT_PATH_PARAMETER_IDENTIFIER: resource[Constants.EVENT_RESOURCE_IDENTIFIER]}
     }
-
 
 @mock_dynamodb2
 class TestHandlerCase(unittest.TestCase):

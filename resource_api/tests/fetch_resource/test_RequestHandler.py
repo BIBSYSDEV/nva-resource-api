@@ -43,12 +43,12 @@ class TestHandlerCase(unittest.TestCase):
         _dynamodb = boto3.resource('dynamodb', region_name=region)
         _table_connection = _dynamodb.create_table(TableName=table_name,
                                                    KeySchema=[
-                                                       {'AttributeName': 'resource_identifier',
+                                                       {'AttributeName': 'identifier',
                                                         'KeyType': 'HASH'},
                                                        {'AttributeName': 'modifiedDate',
                                                         'KeyType': 'RANGE'}],
                                                    AttributeDefinitions=[
-                                                       {'AttributeName': 'resource_identifier',
+                                                       {'AttributeName': 'identifier',
                                                         'AttributeType': 'S'},
                                                        {'AttributeName': 'modifiedDate',
                                                         'AttributeType': 'S'}],
@@ -56,10 +56,10 @@ class TestHandlerCase(unittest.TestCase):
                                                                           'WriteCapacityUnits': 1})
         _table_connection.put_item(
             Item={
-                'resource_identifier': self.EXISTING_RESOURCE_IDENTIFIER,
+                'identifier': self.EXISTING_RESOURCE_IDENTIFIER,
                 'modifiedDate': '2019-10-24T12:57:02.655994Z',
                 'createdDate': '2019-10-24T12:57:02.655994Z',
-                'metadata': {
+                'entityDescription': {
                     'titles': {
                         'no': 'En tittel'
                     }

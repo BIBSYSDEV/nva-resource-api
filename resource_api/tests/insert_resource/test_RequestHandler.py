@@ -30,8 +30,8 @@ def remove_mock_database(dynamodb):
 def generate_mock_event(http_method, resource):
     body_value = json.dumps(resource)
     return {
-        'httpMethod': http_method,
-        'body': body_value
+        Constants.EVENT_HTTP_METHOD: http_method,
+        Constants.EVENT_BODY: body_value,
     }
 
 @mock_dynamodb2
