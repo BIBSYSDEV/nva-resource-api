@@ -175,8 +175,8 @@ Resources:
   InsertResource:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./resource_api/insert_resource
-      Handler: app.handler
+      CodeUri: ./resource_api
+      Handler: insert_resource/app.handler
       Runtime: python3.7
       Events:
         PostEvent:
@@ -196,8 +196,8 @@ Resources:
   FetchResource:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./resource_api/fetch_resource
-      Handler: app.handler
+      CodeUri: ./resource_api
+      Handler: fetch_resource/app.handler
       Runtime: python3.7
       Events:
         PostEvent:
@@ -217,8 +217,8 @@ Resources:
   ModifyResource:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./resource_api/modify_resource
-      Handler: app.handler
+      CodeUri: ./resource_api
+      Handler: modify_resource/app.handler
       Runtime: python3.7
       Events:
         PutEvent:

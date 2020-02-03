@@ -1,11 +1,11 @@
 import http
 import os
 
-from resource_api.common.constants import Constants
-from resource_api.common.dynamo import DynamoDB
-from resource_api.common.helpers import response
+from common.constants import Constants
+from common.dynamo import DynamoDB
+from common.helpers import response
 
-from resource_api.fetch_resource.main.RequestHandler import RequestHandler
+from fetch_resource.main.RequestHandler import RequestHandler
 
 
 _dynamodb = None

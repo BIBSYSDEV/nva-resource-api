@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from boto3.resources.base import ServiceResource
 
-from resource_api.common import dynamo
+from common import dynamo
 
 
 class TestDynamo(TestCase):

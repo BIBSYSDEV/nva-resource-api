@@ -1,4 +1,0 @@
-pylint
-boto3
-boto3_type_annotations
-moto
