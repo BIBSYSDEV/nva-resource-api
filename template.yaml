@@ -24,7 +24,7 @@ Parameters:
     Description: Base path mapping in CustomDomain
 
 Resources:
-  InsertResourceApi:
+  ResourceApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod

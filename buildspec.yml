@@ -13,7 +13,7 @@ phases:
       - pip3 install aws-sam-cli
 
       # Install project requirements
-      - pip3 install -r resource_api/requirements.txt
+      - pip3 install --upgrade pip -r resource_api/requirements.txt
 
   pre_build:
     commands:
