@@ -31,7 +31,7 @@ Resources:
       DefinitionBody:
         openapi: 3.0.0
         info:
-          title: NVA Reource API
+          title: NVA Resource API
           version: '1.0'
         paths:
           /:

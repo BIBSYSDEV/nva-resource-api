@@ -1,4 +1,4 @@
 {
   "httpMethod": "POST",
-  "body":"{\"resource\": {\"owner\": \"owner@unit.no\", \"files\": {},\"metadata\": {\"titles\": {\"no\": \"En tittel\",\"en\": \"A title\"}}}}"
+  "body":"{\"identifier\": \"ebf20333-35a5-4a06-9c58-68ea688a9a8b\", \"modifiedDate\": \"2019-11-02T08:46:14.464755+00:00\", \"createdDate\": \"2019-11-02T08:46:14.464755+00:00\", \"owner\": \"owner@unit.no\", \"files\": {},\"entityDescription\": {\"titles\": {\"no\": \"En tittel\",\"en\": \"A title\"}}}}"
 }
