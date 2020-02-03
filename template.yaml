@@ -240,5 +240,5 @@ Resources:
     Properties:
       BasePath: !Ref CustomDomainBasePath
       DomainName: !Ref CustomDomain
-      RestApiId: !Ref InsertResourceApi
-      Stage: !Ref InsertResourceApi.Stage
+      RestApiId: !Ref ResourceApi
+      Stage: !Ref ResourceApi.Stage
