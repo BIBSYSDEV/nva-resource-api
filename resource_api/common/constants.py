@@ -13,8 +13,6 @@ class Constants:
     EVENT_PATH_PARAMETER_IDENTIFIER = 'identifier'
     EVENT_RESOURCE_IDENTIFIER = 'identifier'
 
-    JSON_ATTRIBUTE_NAME_RESOURCE = 'resource'
-
     RESPONSE_STATUS_CODE = 'statusCode'
     RESPONSE_BODY = 'body'
     RESPONSE_HEADERS = 'headers'
@@ -27,8 +25,7 @@ class Constants:
     DDB_FIELD_RESOURCE_IDENTIFIER = 'identifier'
     DDB_FIELD_MODIFIED_DATE = 'modifiedDate'
     DDB_FIELD_CREATED_DATE = 'createdDate'
-    DDB_FIELD_METADATA = 'metadata'
-    DDB_FIELD_FILES = 'files'
+    DDB_FIELD_FILE_SET = 'fileSet'
     DDB_FIELD_OWNER = 'owner'
     DDB_FIELD_ENTITY_DESCRIPTION = 'entityDescription'
 

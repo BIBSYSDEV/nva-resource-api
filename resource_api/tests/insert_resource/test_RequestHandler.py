@@ -252,7 +252,7 @@ class TestHandlerCase(unittest.TestCase):
         app.clear_dynamodb()
         _event = {
             Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_POST,
-            Constants.EVENT_BODY: "{\"resource\": {}}"
+            Constants.EVENT_BODY: "{}"
         }
         _handler_response = app.handler(_event, None)
         self.assertEqual(_handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.INTERNAL_SERVER_ERROR,
@@ -266,7 +266,7 @@ class TestHandlerCase(unittest.TestCase):
         app.clear_dynamodb()
         _event = {
             Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_POST,
-            Constants.EVENT_BODY: "{\"resource\": {}}"
+            Constants.EVENT_BODY: "{}"
         }
 
         _handler_response = app.handler(_event, None)
