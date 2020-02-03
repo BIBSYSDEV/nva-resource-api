@@ -33,9 +33,18 @@ Resources:
         info:
           title: NVA Resource API
           version: '1.0'
+        x-amazon-apigateway-request-validators:
+          all:
+            validateRequestBody: true,
+            validateRequestParameters: true
+          params-only:
+            validateRequestBody: false,
+            validateRequestParameters: true
+        x-amazon-apigateway-request-validator : params-only
         paths:
           /:
             post:
+              x-amazon-apigateway-request-validator : all
               summary: Insert Resource in Database.
               security:
                 - CognitoUserPool: []
@@ -53,12 +62,12 @@ Resources:
                 type: AWS_PROXY
                 passthroughBehavior: WHEN_NO_MATCH
               responses:
-                '200':
+                '201':
                   description: OK
                   content:
                     application/json:
                       schema:
-                        $ref: '#/components/schemas/Resource'
+                        $ref: '#/components/schemas/DdbResponse'
           /{identifier}:
             get:
               summary: Fetch Resource in Database.
@@ -83,8 +92,9 @@ Resources:
                   content:
                     application/json:
                       schema:
-                        $ref: '#/components/schemas/Resource'
+                        type: object
             put:
+              x-amazon-apigateway-request-validator : all
               summary: Modify Resource in Database.
               security:
                 - CognitoUserPool: []
@@ -115,7 +125,7 @@ Resources:
                   content:
                     application/json:
                       schema:
-                        $ref: '#/components/schemas/Resource'
+                        $ref: '#/components/schemas/DdbResponse'
         components:
           securitySchemes:
             CognitoUserPool:
@@ -128,6 +138,18 @@ Resources:
                 providerARNs:
                   - !Ref CognitoAuthorizerArn
           schemas:
+            DdbResponse:
+              title: DynamoDB Response
+              type: object
+              properties:
+                identifier:
+                  type: string
+                  format: uuid
+                ResponseMetadata:
+                  type: object
+              required:
+                - identifier
+                - ResponseMetadata
             Resource:
               title: NVA Resource
               type: object
