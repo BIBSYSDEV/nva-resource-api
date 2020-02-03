@@ -44,7 +44,7 @@ Resources:
         paths:
           /:
             post:
-              x-amazon-apigateway-request-validator : all
+              x-amazon-apigateway-request-validator: all
               summary: Insert Resource in Database.
               security:
                 - CognitoUserPool: []
@@ -94,7 +94,7 @@ Resources:
                       schema:
                         type: object
             put:
-              x-amazon-apigateway-request-validator : all
+              x-amazon-apigateway-request-validator: all
               summary: Modify Resource in Database.
               security:
                 - CognitoUserPool: []
