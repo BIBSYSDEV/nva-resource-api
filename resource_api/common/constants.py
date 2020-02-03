@@ -6,6 +6,7 @@ class Constants:
 
     ENV_VAR_REGION = 'REGION'
     ENV_VAR_TABLE_NAME = 'TABLE_NAME'
+    ENV_ALLOWED_ORIGIN = 'ALLOWED_ORIGIN'
 
     EVENT_BODY = 'body'
     EVENT_HTTP_METHOD = 'httpMethod'
@@ -141,3 +142,8 @@ class Constants:
     def error_insufficient_parameters():
         """Returns the NVA error text for insufficient parameters"""
         return 'Insufficient parameters'
+
+    @staticmethod
+    def env_var_allowed_origin():
+        """Returns the key name for allowed origin environment variable"""
+        return 'ALLOWED_ORIGIN'
