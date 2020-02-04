@@ -1,13 +1,9 @@
-import os
-import sys
-from unittest import mock
-
 import http
 import json
-import random
-import string
+import os
+import sys
 import unittest
-import uuid
+from unittest import mock
 
 import boto3
 from moto import mock_dynamodb2
@@ -18,11 +14,6 @@ from resource_api.common.http_constants import HttpConstants
 testdir = os.path.dirname(__file__)
 srcdir = '../'
 sys.path.insert(0, os.path.abspath(os.path.join(testdir, srcdir)))
-
-
-def unittest_lambda_handler(event, context):
-    unittest.TextTestRunner().run(
-        unittest.TestLoader().loadTestsFromTestCase(TestHandlerCase))
 
 
 def remove_mock_database(dynamodb):
@@ -77,26 +68,6 @@ class TestHandlerCase(unittest.TestCase):
         )
 
         return dynamodb
-
-    def generate_random_resource(self, time_created, time_modified=None, uuid=uuid.uuid4().__str__()):
-        if time_modified is None:
-            time_modified = time_created
-        return {
-            'identifier': uuid,
-            'modifiedDate': time_modified,
-            'createdDate': time_created,
-            'entityDescription': {
-                'titles': {
-                    'no': self.random_word(6)
-                }
-            },
-            'fileSet': {},
-            'owner': 'owner@unit.no'
-        }
-
-    def random_word(self, length):
-        letters = string.ascii_lowercase
-        return ''.join(random.choice(letters) for i in range(length))
 
     def generate_mock_resource(self):
         return json.loads('''
@@ -289,6 +260,3 @@ class TestHandlerCase(unittest.TestCase):
         self.assertEqual(_handler_modify_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
         remove_mock_database(_dynamodb)
-
-if __name__ == '__main__':
-    unittest.main()

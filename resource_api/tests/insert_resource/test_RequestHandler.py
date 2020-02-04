@@ -18,11 +18,6 @@ srcdir = '../'
 sys.path.insert(0, os.path.abspath(os.path.join(testdir, srcdir)))
 
 
-def unittest_lambda_handler(event, context):
-    unittest.TextTestRunner().run(
-        unittest.TestLoader().loadTestsFromTestCase(TestHandlerCase))
-
-
 def remove_mock_database(dynamodb):
     dynamodb.Table(os.environ[Constants.env_var_table_name()]).delete()
 
@@ -74,10 +69,6 @@ class TestHandlerCase(unittest.TestCase):
         )
 
         return dynamodb
-
-    def random_word(self, length):
-        letters = string.ascii_lowercase
-        return ''.join(random.choice(letters) for i in range(length))
 
     def generate_mock_resource(self):
         return json.loads('''
@@ -286,6 +277,3 @@ class TestHandlerCase(unittest.TestCase):
         self.assertEqual(_handler_insert_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
         remove_mock_database(_dynamodb)
-
-if __name__ == '__main__':
-    unittest.main()

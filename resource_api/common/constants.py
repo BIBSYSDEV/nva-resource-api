@@ -65,16 +65,6 @@ class Constants:
         return 'Items'
 
     @staticmethod
-    def ddb_response_attribute_name_response_metadata():
-        """Returns the ResponseMetadata key for Dynamo DB response"""
-        return 'ResponseMetadata'
-
-    @staticmethod
-    def ddb_response_attribute_name_response_http_status_code():
-        """Returns the HTTPStatusCode key for Dynamo DB response"""
-        return 'HTTPStatusCode'
-
-    @staticmethod
     def ddb_field_identifier():
         """Returns the NVA field name for identifier"""
         return 'identifier'
@@ -93,21 +83,6 @@ class Constants:
     def ddb_field_entity_description():
         """Returns the NVA field name for entity description"""
         return 'entityDescription'
-
-    @staticmethod
-    def ddb_field_file_set():
-        """Returns the NVA field name for file set"""
-        return 'fileSet'
-
-    @staticmethod
-    def ddb_field_owner():
-        """Returns the NVA field name for owner"""
-        return 'owner'
-
-    @staticmethod
-    def error_missing_event():
-        """Returns the NVA error text for missing event"""
-        return 'Missing event'
 
     @staticmethod
     def error_insufficient_parameters():

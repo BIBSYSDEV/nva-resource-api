@@ -33,7 +33,3 @@ class TestHandlerCase(unittest.TestCase):
             _response[Constants.response_headers()][HttpConstants.http_header_access_control_allow_origin()],
             '*'
         )
-
-
-if __name__ == '__main__':
-    unittest.main()

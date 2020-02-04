@@ -13,14 +13,12 @@ _dynamodb = None
 
 def handler(event, context):
 
-    if Constants.event_path_parameters() not in event or Constants.event_http_method() not in event:
-        return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())
-
     global _dynamodb
     if _dynamodb is None:
         try:
             ddb = DynamoDB()
             _dynamodb = ddb.connect(os.environ[Constants.env_var_region()])
+            _dynamodb
         except Exception as e:
             return response(http.HTTPStatus.INTERNAL_SERVER_ERROR, e.args[0])
 

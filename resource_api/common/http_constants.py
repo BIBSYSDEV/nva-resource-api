@@ -19,11 +19,6 @@ class HttpConstants:
         return 'PUT'
 
     @staticmethod
-    def http_method_options():
-        """Returns the HTTP method name OPTIONS"""
-        return 'OPTIONS'
-
-    @staticmethod
     def http_header_access_control_allow_origin():
         """Returns the string for CORS header Access-Control-Allow-Origin"""
         return 'Access-Control-Allow-Origin'
