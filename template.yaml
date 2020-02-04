@@ -29,54 +29,50 @@ Resources:
     Properties:
       StageName: Prod
       DefinitionBody:
-        openapi: 3.0.0
+        swagger: "2.0"
         info:
           title: NVA Resource API
           version: '1.0'
-        x-amazon-apigateway-request-validators:
-          all:
-            validateRequestBody: true,
-            validateRequestParameters: true
-          params-only:
-            validateRequestBody: false,
-            validateRequestParameters: true
-        x-amazon-apigateway-request-validator : params-only
         paths:
           /:
             post:
-              x-amazon-apigateway-request-validator: all
+              x-amazon-apigateway-request-validator: body-only
               summary: Insert Resource in Database.
+              consumes:
+                - application/json
+              produces:
+                - application/json
               security:
                 - CognitoUserPool: []
-              requestBody:
-                required: true
-                content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/Resource'
+              parameters:
+                - in: body
+                  required: true
+                  name: Resource
+                  schema:
+                    $ref: "#/definitions/Resource"
               x-amazon-apigateway-integration:
                 uri:
                   Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${InsertResource.Arn}/invocations
                 responses: {}
                 httpMethod: POST
                 type: AWS_PROXY
-                passthroughBehavior: WHEN_NO_MATCH
               responses:
                 '201':
                   description: OK
-                  content:
-                    application/json:
-                      schema:
-                        $ref: '#/components/schemas/DdbResponse'
+                  schema:
+                    $ref: '#/definitions/DdbResponse'
           /{identifier}:
             get:
+              x-amazon-apigateway-request-validator : params-only
               summary: Fetch Resource in Database.
+                - application/json
+              produces:
+                - application/json
               parameters:
                 - in: path
                   name: identifier
-                  schema:
-                    type: string
-                    format: uuid
+                  type: string
+                  format: uuid
                   required: true
                   description: UUID identifier of the Resource to fetch.
               x-amazon-apigateway-integration:
@@ -85,115 +81,120 @@ Resources:
                 responses: {}
                 httpMethod: POST
                 type: AWS_PROXY
-                passthroughBehavior: WHEN_NO_MATCH
               responses:
                 '200':
                   description: OK
-                  content:
-                    application/json:
-                      schema:
-                        type: object
+                  schema:
+                    type: object
             put:
               x-amazon-apigateway-request-validator: all
               summary: Modify Resource in Database.
+              consumes:
+                - application/json
+              produces:
+                - application/json
               security:
                 - CognitoUserPool: []
               parameters:
                 - in: path
                   name: identifier
-                  schema:
-                    type: string
-                    format: uuid
+                  type: string
+                  format: uuid
                   required: true
                   description: UUID identifier of the Resource to modify.
-              requestBody:
-                required: true
-                content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/Resource'
+                - in: body
+                  required: true
+                  name: Resource
+                  schema:
+                    $ref: "#/definitions/Resource"
               x-amazon-apigateway-integration:
                 uri:
                   Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ModifyResource.Arn}/invocations
                 responses: {}
                 httpMethod: POST
                 type: AWS_PROXY
-                passthroughBehavior: WHEN_NO_MATCH
               responses:
                 '200':
                   description: OK
-                  content:
-                    application/json:
-                      schema:
-                        $ref: '#/components/schemas/DdbResponse'
-        components:
-          securitySchemes:
-            CognitoUserPool:
-              type: apiKey
-              name: Authorization
-              in: header
-              x-amazon-apigateway-authtype: cognito_user_pools
-              x-amazon-apigateway-authorizer:
-                type: cognito_user_pools
-                providerARNs:
-                  - !Ref CognitoAuthorizerArn
-          schemas:
-            DdbResponse:
-              title: DynamoDB Response
-              type: object
-              properties:
-                identifier:
-                  type: string
-                  format: uuid
-                ResponseMetadata:
-                  type: object
-              required:
-                - identifier
-                - ResponseMetadata
-            Resource:
-              title: NVA Resource
-              type: object
-              properties:
-                identifier:
-                  type: string
-                  format: uuid
-                createdDate:
-                  type: string
-                  format: date-time
-                modifiedDate:
-                  type: string
-                  format: date-time
-                publishedDate:
-                  type: string
-                  format: date-time
-                indexedDate:
-                  type: string
-                  format: date-time
-                owner:
-                  type: string
-                entityDescription:
-                  type: object
-                status:
-                  type: string
-                link:
-                  type: string
-                  format: uri
-                handle:
-                  type: string
-                  format: uri
-                publisher:
-                  type: object
-                license:
-                  type: object
-                fileSet:
-                  type: object
-              required:
-                - identifier
-                - createdDate
-                - modifiedDate
-                - owner
-                - entityDescription
-                - status
+                  schema:
+                    $ref: '#/definitions/DdbResponse'
+        securityDefinitions:
+          CognitoUserPool:
+            type: apiKey
+            name: Authorization
+            in: header
+            x-amazon-apigateway-authtype: cognito_user_pools
+            x-amazon-apigateway-authorizer:
+              type: cognito_user_pools
+              providerARNs:
+                - "!Ref CognitoAuthorizerArn"
+        definitions:
+          DdbResponse:
+            title: DynamoDB Response
+            type: object
+            properties:
+              identifier:
+                type: string
+                format: uuid
+              ResponseMetadata:
+                type: object
+            required:
+              - identifier
+              - ResponseMetadata
+          Resource:
+            title: NVA Resource
+            type: object
+            properties:
+              identifier:
+                type: string
+                format: uuid
+              createdDate:
+                type: string
+                format: date-time
+              modifiedDate:
+                type: string
+                format: date-time
+              publishedDate:
+                type: string
+                format: date-time
+              indexedDate:
+                type: string
+                format: date-time
+              owner:
+                type: string
+              entityDescription:
+                type: object
+              status:
+                type: string
+              link:
+                type: string
+                format: uri
+              handle:
+                type: string
+                format: uri
+              publisher:
+                type: object
+              license:
+                type: object
+              fileSet:
+                type: object
+            required:
+              - identifier
+              - createdDate
+              - modifiedDate
+              - owner
+              - entityDescription
+              - status
+        x-amazon-apigateway-request-validators:
+          all:
+            validateRequestBody: true
+            validateRequestParameters: true
+          params-only:
+            validateRequestBody: false
+            validateRequestParameters: true
+          body-only:
+            validateRequestBody: true
+            validateRequestParameters: false
   InsertResource:
     Type: AWS::Serverless::Function
     Properties:
