@@ -127,7 +127,7 @@ Resources:
             x-amazon-apigateway-authorizer:
               type: cognito_user_pools
               providerARNs:
-                - "!Ref CognitoAuthorizerArn"
+                - !Ref CognitoAuthorizerArn
         definitions:
           DdbResponse:
             title: DynamoDB Response
