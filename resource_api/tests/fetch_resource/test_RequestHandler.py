@@ -22,7 +22,7 @@ def unittest_lambda_handler(event, context):
 
 
 def remove_mock_database(dynamodb):
-    dynamodb.Table(os.environ[Constants.ENV_VAR_TABLE_NAME]).delete()
+    dynamodb.Table(os.environ[Constants.env_var_table_name()]).delete()
 
 
 @mock_dynamodb2
@@ -75,7 +75,7 @@ class TestHandlerCase(unittest.TestCase):
         from resource_api.fetch_resource import app
         _event = {}
         _handler_response = app.handler(_event, None)
-        self.assertEqual(_handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
+        self.assertEqual(_handler_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
 
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
@@ -84,11 +84,11 @@ class TestHandlerCase(unittest.TestCase):
         del os.environ['REGION']
         from resource_api.fetch_resource import app
         _event = {
-            Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_GET,
-            Constants.EVENT_PATH_PARAMETERS: {Constants.EVENT_PATH_PARAMETER_IDENTIFIER: self.EXISTING_RESOURCE_IDENTIFIER},
+            Constants.event_http_method(): HttpConstants.http_method_get(),
+            Constants.event_path_parameters(): {Constants.event_path_parameter_identifier(): self.EXISTING_RESOURCE_IDENTIFIER},
         }
         _handler_response = app.handler(_event, None)
-        self.assertEqual(_handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.INTERNAL_SERVER_ERROR,
+        self.assertEqual(_handler_response[Constants.response_status_code()], http.HTTPStatus.INTERNAL_SERVER_ERROR,
                          'HTTP Status code not 500')
 
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
@@ -97,12 +97,12 @@ class TestHandlerCase(unittest.TestCase):
         del os.environ['TABLE_NAME']
         from resource_api.fetch_resource import app
         _event = {
-            Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_GET,
-            Constants.EVENT_PATH_PARAMETERS: {Constants.EVENT_PATH_PARAMETER_IDENTIFIER: ''},
+            Constants.event_http_method(): HttpConstants.http_method_get(),
+            Constants.event_path_parameters(): {Constants.event_path_parameter_identifier(): ''},
         }
 
         _handler_response = app.handler(_event, None)
-        self.assertEqual(_handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.INTERNAL_SERVER_ERROR,
+        self.assertEqual(_handler_response[Constants.response_status_code()], http.HTTPStatus.INTERNAL_SERVER_ERROR,
                          'HTTP Status code not 500')
 
     def test_handler_retrieve_resource_missing_event(self):
@@ -113,7 +113,7 @@ class TestHandlerCase(unittest.TestCase):
 
         _handler_retrieve_response = _request_handler.handler(None, None)
 
-        self.assertEqual(_handler_retrieve_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
+        self.assertEqual(_handler_retrieve_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
         remove_mock_database(_dynamodb)
 
@@ -126,13 +126,13 @@ class TestHandlerCase(unittest.TestCase):
         _request_handler = RequestHandler(_dynamodb)
 
         _event = {
-            Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_GET,
-            Constants.EVENT_PATH_PARAMETERS: {Constants.EVENT_PATH_PARAMETER_IDENTIFIER: 'ebf20333-35a5-4a06-9c58-68ea688a9a8b'}
+            Constants.event_http_method(): HttpConstants.http_method_get(),
+            Constants.event_path_parameters(): {Constants.event_path_parameter_identifier(): 'ebf20333-35a5-4a06-9c58-68ea688a9a8b'}
         }
 
         _handler_retrieve_response = _request_handler.handler(_event, None)
 
-        self.assertEqual(_handler_retrieve_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.OK,
+        self.assertEqual(_handler_retrieve_response[Constants.response_status_code()], http.HTTPStatus.OK,
                          'HTTP Status code not 200')
         remove_mock_database(_dynamodb)
 
@@ -145,13 +145,13 @@ class TestHandlerCase(unittest.TestCase):
         _request_handler = RequestHandler(_dynamodb)
 
         _event = {
-            Constants.EVENT_HTTP_METHOD: 'POST',
-            Constants.EVENT_PATH_PARAMETERS: {Constants.EVENT_PATH_PARAMETER_IDENTIFIER: 'ebf20333-35a5-4a06-9c58-68ea688a9a8b'}
+            Constants.event_http_method(): 'POST',
+            Constants.event_path_parameters(): {Constants.event_path_parameter_identifier(): 'ebf20333-35a5-4a06-9c58-68ea688a9a8b'}
         }
 
         _handler_retrieve_response = _request_handler.handler(_event, None)
 
-        self.assertEqual(_handler_retrieve_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
+        self.assertEqual(_handler_retrieve_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
         remove_mock_database(_dynamodb)
 
@@ -164,13 +164,13 @@ class TestHandlerCase(unittest.TestCase):
         _request_handler = RequestHandler(_dynamodb)
 
         _event = {
-            Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_GET,
-            Constants.EVENT_PATH_PARAMETERS: {Constants.EVENT_PATH_PARAMETER_IDENTIFIER: 'fbf20333-35a5-4a06-9c58-68ea688a9a8b'}
+            Constants.event_http_method(): HttpConstants.http_method_get(),
+            Constants.event_path_parameters(): {Constants.event_path_parameter_identifier(): 'fbf20333-35a5-4a06-9c58-68ea688a9a8b'}
         }
 
         _handler_retrieve_response = _request_handler.handler(_event, None)
 
-        self.assertEqual(_handler_retrieve_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.NOT_FOUND,
+        self.assertEqual(_handler_retrieve_response[Constants.response_status_code()], http.HTTPStatus.NOT_FOUND,
                          'HTTP Status code not 404')
         remove_mock_database(_dynamodb)
 
@@ -183,13 +183,13 @@ class TestHandlerCase(unittest.TestCase):
         _request_handler = RequestHandler(_dynamodb)
 
         _event = {
-            Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_GET,
-            Constants.EVENT_PATH_PARAMETERS: {}
+            Constants.event_http_method(): HttpConstants.http_method_get(),
+            Constants.event_path_parameters(): {}
         }
 
         _handler_retrieve_response = _request_handler.handler(_event, None)
 
-        self.assertEqual(_handler_retrieve_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
+        self.assertEqual(_handler_retrieve_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
         remove_mock_database(_dynamodb)
 

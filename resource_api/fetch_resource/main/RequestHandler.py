@@ -16,29 +16,29 @@ class RequestHandler:
 
         self.dynamodb = dynamodb
 
-        self.table_name = os.environ.get(Constants.ENV_VAR_TABLE_NAME)
+        self.table_name = os.environ.get(Constants.env_var_table_name())
         self.table: Table = self.dynamodb.Table(self.table_name)
 
     def __retrieve_resource(self, uuid):
         _ddb_response = self.table.query(
-            KeyConditionExpression=Key(Constants.DDB_FIELD_IDENTIFIER).eq(uuid),
+            KeyConditionExpression=Key(Constants.ddb_field_identifier()).eq(uuid),
             ScanIndexForward=False
         )
         return _ddb_response
 
     def handler(self, event, context):
-        if event is None or Constants.EVENT_PATH_PARAMETERS not in event:
-            return response(http.HTTPStatus.BAD_REQUEST, Constants.ERROR_INSUFFICIENT_PARAMETERS)
+        if event is None or Constants.event_path_parameters() not in event:
+            return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())
 
-        if Constants.EVENT_PATH_PARAMETER_IDENTIFIER not in event[Constants.EVENT_PATH_PARAMETERS]:
-            return response(http.HTTPStatus.BAD_REQUEST, Constants.ERROR_INSUFFICIENT_PARAMETERS)
+        if Constants.event_path_parameter_identifier() not in event[Constants.event_path_parameters()]:
+            return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())
 
-        _identifier = event[Constants.EVENT_PATH_PARAMETERS][Constants.EVENT_PATH_PARAMETER_IDENTIFIER]
-        _http_method = event[Constants.EVENT_HTTP_METHOD]
+        _identifier = event[Constants.event_path_parameters()][Constants.event_path_parameter_identifier()]
+        _http_method = event[Constants.event_http_method()]
 
-        if _http_method == HttpConstants.HTTP_METHOD_GET and _identifier:
+        if _http_method == HttpConstants.http_method_get() and _identifier:
             _ddb_response = self.__retrieve_resource(_identifier)
-            if len(_ddb_response[Constants.DDB_RESPONSE_ATTRIBUTE_NAME_ITEMS]) == 0:
+            if len(_ddb_response[Constants.ddb_response_attribute_name_items()]) == 0:
                 return response(http.HTTPStatus.NOT_FOUND, json.dumps(_ddb_response))
             return response(http.HTTPStatus.OK, json.dumps(_ddb_response))
-        return response(http.HTTPStatus.BAD_REQUEST, Constants.ERROR_INSUFFICIENT_PARAMETERS)
+        return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())

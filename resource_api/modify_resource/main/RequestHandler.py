@@ -16,44 +16,41 @@ class RequestHandler:
 
         self.dynamodb = dynamodb
 
-        self.table_name = os.environ.get(Constants.ENV_VAR_TABLE_NAME)
+        self.table_name = os.environ.get(Constants.env_var_table_name())
         self.table: Table = self.dynamodb.Table(self.table_name)
-
-    def get_table_connection(self):
-        return self.table
 
     def modify_resource(self, modified_resource):
         ddb_response = self.table.query(
-            KeyConditionExpression=Key(Constants.DDB_FIELD_IDENTIFIER).eq(
-                modified_resource[Constants.EVENT_IDENTIFIER]))
+            KeyConditionExpression=Key(Constants.ddb_field_identifier()).eq(
+                modified_resource[Constants.event_identifier()]))
 
-        if len(ddb_response[Constants.DDB_RESPONSE_ATTRIBUTE_NAME_ITEMS]) == 0:
-            raise ValueError('Resource with identifier ' + modified_resource[Constants.EVENT_IDENTIFIER] + ' not found')
+        if len(ddb_response[Constants.ddb_response_attribute_name_items()]) == 0:
+            raise ValueError('Resource with identifier ' + modified_resource[Constants.event_identifier()] + ' not found')
 
         ddb_response = self.table.put_item(Item=modified_resource)
         return ddb_response
 
     def handler(self, event, context):
-        if event is None or Constants.EVENT_PATH_PARAMETERS not in event:
-            return response(http.HTTPStatus.BAD_REQUEST, Constants.ERROR_INSUFFICIENT_PARAMETERS)
+        if event is None or Constants.event_path_parameters() not in event:
+            return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())
 
-        if Constants.EVENT_PATH_PARAMETER_IDENTIFIER not in event[Constants.EVENT_PATH_PARAMETERS]:
-            return response(http.HTTPStatus.BAD_REQUEST, Constants.ERROR_INSUFFICIENT_PARAMETERS)
+        if Constants.event_path_parameter_identifier() not in event[Constants.event_path_parameters()]:
+            return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())
 
         try:
-            body = json.loads(event[Constants.EVENT_BODY])
+            body = json.loads(event[Constants.event_body()])
         except JSONDecodeError as e:
             return response(http.HTTPStatus.BAD_REQUEST, e.args[0])
 
-        identifier = event[Constants.EVENT_PATH_PARAMETERS][Constants.EVENT_PATH_PARAMETER_IDENTIFIER]
-        http_method = event[Constants.EVENT_HTTP_METHOD]
+        identifier = event[Constants.event_path_parameters()][Constants.event_path_parameter_identifier()]
+        http_method = event[Constants.event_http_method()]
 
-        if http_method == HttpConstants.HTTP_METHOD_PUT and body is not None:
+        if http_method == HttpConstants.http_method_put() and body is not None:
             try:
                 ddb_response = self.modify_resource(body)
-                ddb_response[Constants.EVENT_IDENTIFIER] = identifier
+                ddb_response[Constants.event_identifier()] = identifier
                 return response(http.HTTPStatus.OK, json.dumps(ddb_response))
             except ValueError as e:
                 return response(http.HTTPStatus.BAD_REQUEST, e.args[0])
 
-        return response(http.HTTPStatus.BAD_REQUEST, Constants.ERROR_INSUFFICIENT_PARAMETERS)
+        return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())

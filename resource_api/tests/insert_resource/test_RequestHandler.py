@@ -24,14 +24,14 @@ def unittest_lambda_handler(event, context):
 
 
 def remove_mock_database(dynamodb):
-    dynamodb.Table(os.environ[Constants.ENV_VAR_TABLE_NAME]).delete()
+    dynamodb.Table(os.environ[Constants.env_var_table_name()]).delete()
 
 
 def generate_mock_event(http_method, resource):
     body_value = json.dumps(resource)
     return {
-        Constants.EVENT_HTTP_METHOD: http_method,
-        Constants.EVENT_BODY: body_value,
+        Constants.event_http_method(): http_method,
+        Constants.event_body(): body_value,
     }
 
 @mock_dynamodb2
@@ -114,9 +114,9 @@ class TestHandlerCase(unittest.TestCase):
                                             'testing')
         request_handler = RequestHandler(dynamodb)
         resource = self.generate_mock_resource()
-        event = generate_mock_event(HttpConstants.HTTP_METHOD_POST, resource)
+        event = generate_mock_event(HttpConstants.http_method_post(), resource)
         handler_insert_response = request_handler.handler(event, None)
-        self.assertEqual(handler_insert_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.CREATED,
+        self.assertEqual(handler_insert_response[Constants.response_status_code()], http.HTTPStatus.CREATED,
                          'HTTP Status code not 201')
         remove_mock_database(dynamodb)
 
@@ -130,7 +130,7 @@ class TestHandlerCase(unittest.TestCase):
         resource = self.generate_mock_resource()
         event = generate_mock_event('INVALID_HTTP_METHOD', resource)
         handler_response = request_handler.handler(event, None)
-        self.assertEqual(handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
+        self.assertEqual(handler_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
         remove_mock_database(dynamodb)
 
@@ -141,9 +141,9 @@ class TestHandlerCase(unittest.TestCase):
         dynamodb = self.setup_mock_database('eu-west-1',
                                             'testing')
         request_handler = RequestHandler(dynamodb)
-        event = generate_mock_event(HttpConstants.HTTP_METHOD_POST, None)
+        event = generate_mock_event(HttpConstants.http_method_post(), None)
         handler_insert_response = request_handler.handler(event, None)
-        self.assertEqual(handler_insert_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
+        self.assertEqual(handler_insert_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
         remove_mock_database(dynamodb)
 
@@ -157,7 +157,7 @@ class TestHandlerCase(unittest.TestCase):
         resource = self.generate_mock_resource()
         event = generate_mock_event(None, resource)
         handler_response = request_handler.handler(event, None)
-        self.assertEqual(handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
+        self.assertEqual(handler_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
         remove_mock_database(dynamodb)
 
@@ -168,7 +168,7 @@ class TestHandlerCase(unittest.TestCase):
         dynamodb = self.setup_mock_database('eu-west-1',
                                             'testing')
         handler_insert_response = app.handler(None, None)
-        self.assertEqual(handler_insert_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
+        self.assertEqual(handler_insert_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
         remove_mock_database(dynamodb)
 
@@ -181,30 +181,30 @@ class TestHandlerCase(unittest.TestCase):
         request_handler = RequestHandler(dynamodb)
 
         resource = self.generate_mock_resource()
-        event = generate_mock_event(HttpConstants.HTTP_METHOD_POST, resource)
+        event = generate_mock_event(HttpConstants.http_method_post(), resource)
         handler_insert_response = request_handler.handler(event, None)
 
-        resource_dict_from_json = json.loads(event[Constants.EVENT_BODY])
+        resource_dict_from_json = json.loads(event[Constants.event_body()])
         resource_inserted = resource_dict_from_json
 
-        self.assertEqual(handler_insert_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.CREATED,
+        self.assertEqual(handler_insert_response[Constants.response_status_code()], http.HTTPStatus.CREATED,
                          'HTTP Status code not 201')
 
-        resource_identifier = resource_inserted[Constants.EVENT_IDENTIFIER]
+        resource_identifier = resource_inserted[Constants.event_identifier()]
 
         query_results = request_handler.get_table_connection().query(
-            KeyConditionExpression=Key(Constants.DDB_FIELD_IDENTIFIER).eq(resource_identifier),
+            KeyConditionExpression=Key(Constants.ddb_field_identifier()).eq(resource_identifier),
             ScanIndexForward=True
         )
 
-        inserted_resource = query_results[Constants.DDB_RESPONSE_ATTRIBUTE_NAME_ITEMS][0]
-        self.assertIsNotNone(inserted_resource[Constants.DDB_FIELD_CREATED_DATE], 'Value not persisted as expected')
-        self.assertIsNotNone(inserted_resource[Constants.DDB_FIELD_MODIFIED_DATE], 'Value not persisted as expected')
-        self.assertIsNotNone(inserted_resource[Constants.DDB_FIELD_ENTITY_DESCRIPTION], 'Value not persisted as expected')
-        self.assertEqual(inserted_resource[Constants.DDB_FIELD_MODIFIED_DATE],
-                         inserted_resource[Constants.DDB_FIELD_CREATED_DATE],
+        inserted_resource = query_results[Constants.ddb_response_attribute_name_items()][0]
+        self.assertIsNotNone(inserted_resource[Constants.ddb_field_created_date()], 'Value not persisted as expected')
+        self.assertIsNotNone(inserted_resource[Constants.ddb_field_modified_date()], 'Value not persisted as expected')
+        self.assertIsNotNone(inserted_resource[Constants.ddb_field_entity_description()], 'Value not persisted as expected')
+        self.assertEqual(inserted_resource[Constants.ddb_field_modified_date()],
+                         inserted_resource[Constants.ddb_field_created_date()],
                          'Value not persisted as expected')
-        self.assertEqual(inserted_resource[Constants.DDB_FIELD_ENTITY_DESCRIPTION], resource_inserted['entityDescription'],
+        self.assertEqual(inserted_resource[Constants.ddb_field_entity_description()], resource_inserted['entityDescription'],
                          'Value not persisted as expected')
         remove_mock_database(dynamodb)
 
@@ -214,10 +214,10 @@ class TestHandlerCase(unittest.TestCase):
     def test_app(self):
         from resource_api.insert_resource import app
         event = {
-            Constants.EVENT_BODY: "{}"
+            Constants.event_body(): "{}"
         }
         handler_response = app.handler(event, None)
-        self.assertEqual(handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
+        self.assertEqual(handler_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
 
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
@@ -225,11 +225,11 @@ class TestHandlerCase(unittest.TestCase):
     def test_app_event_empty_body(self):
         from resource_api.insert_resource import app
         event = {
-            Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_POST,
-            Constants.EVENT_BODY: ""
+            Constants.event_http_method(): HttpConstants.http_method_post(),
+            Constants.event_body(): ""
         }
         handler_response = app.handler(event, None)
-        self.assertEqual(handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
+        self.assertEqual(handler_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
 
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
@@ -237,11 +237,11 @@ class TestHandlerCase(unittest.TestCase):
     def test_app_event_invalid_json_in_body(self):
         from resource_api.insert_resource import app
         event = {
-            Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_POST,
-            Constants.EVENT_BODY: "asdf"
+            Constants.event_http_method(): HttpConstants.http_method_post(),
+            Constants.event_body(): "asdf"
         }
         handler_response = app.handler(event, None)
-        self.assertEqual(handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.BAD_REQUEST,
+        self.assertEqual(handler_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
                          'HTTP Status code not 400')
 
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
@@ -251,11 +251,11 @@ class TestHandlerCase(unittest.TestCase):
         from resource_api.insert_resource import app
         app.clear_dynamodb()
         _event = {
-            Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_POST,
-            Constants.EVENT_BODY: "{}"
+            Constants.event_http_method(): HttpConstants.http_method_post(),
+            Constants.event_body(): "{}"
         }
         _handler_response = app.handler(_event, None)
-        self.assertEqual(_handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.INTERNAL_SERVER_ERROR,
+        self.assertEqual(_handler_response[Constants.response_status_code()], http.HTTPStatus.INTERNAL_SERVER_ERROR,
                          'HTTP Status code not 500')
 
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
@@ -265,12 +265,12 @@ class TestHandlerCase(unittest.TestCase):
         from resource_api.insert_resource import app
         app.clear_dynamodb()
         _event = {
-            Constants.EVENT_HTTP_METHOD: HttpConstants.HTTP_METHOD_POST,
-            Constants.EVENT_BODY: "{}"
+            Constants.event_http_method(): HttpConstants.http_method_post(),
+            Constants.event_body(): "{}"
         }
 
         _handler_response = app.handler(_event, None)
-        self.assertEqual(_handler_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.INTERNAL_SERVER_ERROR,
+        self.assertEqual(_handler_response[Constants.response_status_code()], http.HTTPStatus.INTERNAL_SERVER_ERROR,
                          'HTTP Status code not 500')
 
 

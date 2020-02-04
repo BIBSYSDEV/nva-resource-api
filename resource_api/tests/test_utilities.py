@@ -26,7 +26,7 @@ class TestHandlerCase(unittest.TestCase):
 
     def test_helper_response(self):
         _response = response(http.HTTPStatus.OK, 'message')
-        self.assertEqual(_response[Constants.RESPONSE_STATUS_CODE], http.HTTPStatus.OK)
+        self.assertEqual(_response[Constants.response_status_code()], http.HTTPStatus.OK)
 
 if __name__ == '__main__':
     unittest.main()

@@ -5,15 +5,6 @@ from .http_constants import HttpConstants
 from os import environ
 
 
-def remove_none_values(temp_value):
-    """Remove None from dicts to ensure that nulls are ignored"""
-    return_value = dict()
-    for key, value in temp_value.items():
-        if value is not None:
-            return_value[key] = value
-    return return_value
-
-
 def response(status_code, body):
     """Formulates a response with status code and body"""
     headers = dict()

@@ -15,7 +15,7 @@ class RequestHandler:
 
         self.dynamodb = dynamodb
 
-        self.table_name = os.environ.get(Constants.ENV_VAR_TABLE_NAME)
+        self.table_name = os.environ.get(Constants.env_var_table_name())
         self.table: Table = self.dynamodb.Table(self.table_name)
 
     def get_table_connection(self):
@@ -30,14 +30,14 @@ class RequestHandler:
     def handler(self, event, context):
 
         try:
-            body = json.loads(event[Constants.EVENT_BODY])
+            body = json.loads(event[Constants.event_body()])
         except JSONDecodeError as e:
             return response(http.HTTPStatus.BAD_REQUEST, e.args[0])
 
-        http_method = event[Constants.EVENT_HTTP_METHOD]
+        http_method = event[Constants.event_http_method()]
 
-        if http_method == HttpConstants.HTTP_METHOD_POST and body is not None:
+        if http_method == HttpConstants.http_method_post() and body is not None:
             ddb_response = self.insert_resource(body)
             return response(http.HTTPStatus.CREATED, json.dumps(ddb_response))
 
-        return response(http.HTTPStatus.BAD_REQUEST, Constants.ERROR_INSUFFICIENT_PARAMETERS)
+        return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())

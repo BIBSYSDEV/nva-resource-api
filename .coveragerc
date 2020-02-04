@@ -1,0 +1,6 @@
+[run]
+omit =
+    .aws-sam/*
+    .idea/*
+    venv/*
+    */tests/*
