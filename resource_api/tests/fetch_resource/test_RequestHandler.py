@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 from unittest import mock
 
 import http
@@ -75,6 +76,9 @@ class TestHandlerCase(unittest.TestCase):
         _handler_response = app.handler(_event, None)
         self.assertEqual(_handler_response[Constants.response_status_code()], http.HTTPStatus.OK,
                          'HTTP Status code not 200')
+        _ddb_response = json.loads(_handler_response[Constants.event_body()])
+        self.assertEqual(_ddb_response[Constants.ddb_response_attribute_name_count()], 1,
+                         'Count is not 1')
         remove_mock_database(dynamodb)
 
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})

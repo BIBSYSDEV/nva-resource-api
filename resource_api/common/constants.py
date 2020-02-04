@@ -65,6 +65,11 @@ class Constants:
         return 'Items'
 
     @staticmethod
+    def ddb_response_attribute_name_count():
+        """Returns the Count key for a Dynamo DB response"""
+        return 'Count'
+
+    @staticmethod
     def ddb_field_identifier():
         """Returns the NVA field name for identifier"""
         return 'identifier'
