@@ -225,7 +225,8 @@ class TestHandlerCase(unittest.TestCase):
         from resource_api.modify_resource import app
         event = {
             "httpMethod": "PUT",
-            "body": "{'fetch_resource': 'fetch_resource }"
+            "body": "asdf",
+            Constants.event_path_parameters(): {Constants.event_path_parameter_identifier(): self.EXISTING_RESOURCE_IDENTIFIER}
         }
         handler_response = app.handler(event, None)
         self.assertEqual(handler_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
@@ -256,6 +257,38 @@ class TestHandlerCase(unittest.TestCase):
         self.assertEqual(_handler_response[Constants.response_status_code()], http.HTTPStatus.INTERNAL_SERVER_ERROR,
                          'HTTP Status code not 500')
 
+    @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
+    @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
+    def test_handler_modify_resource_missing_resource_identifier(self):
+        from resource_api.modify_resource.main.RequestHandler import RequestHandler
+        _dynamodb = self.setup_mock_database('eu-west-1',
+                                             'testing')
+        _request_handler = RequestHandler(_dynamodb)
+
+        _event = {
+            Constants.event_http_method(): HttpConstants.http_method_put(),
+            Constants.event_path_parameters(): {}
+        }
+
+        _handler_modify_response = _request_handler.handler(_event, None)
+
+        self.assertEqual(_handler_modify_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
+                         'HTTP Status code not 400')
+        remove_mock_database(_dynamodb)
+
+    @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
+    @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
+    def test_handler_modify_resource_missing_event(self):
+        from resource_api.modify_resource.main.RequestHandler import RequestHandler
+        _dynamodb = self.setup_mock_database('eu-west-1',
+                                             'testing')
+        _request_handler = RequestHandler(_dynamodb)
+
+        _handler_modify_response = _request_handler.handler(None, None)
+
+        self.assertEqual(_handler_modify_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
+                         'HTTP Status code not 400')
+        remove_mock_database(_dynamodb)
 
 if __name__ == '__main__':
     unittest.main()

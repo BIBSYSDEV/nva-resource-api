@@ -80,6 +80,18 @@ class TestHandlerCase(unittest.TestCase):
 
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
+    def test_app_event_invalid_json_in_body(self):
+        from resource_api.fetch_resource import app
+        event = {
+            Constants.event_http_method(): HttpConstants.http_method_get(),
+            Constants.event_body(): "asdf"
+        }
+        handler_response = app.handler(event, None)
+        self.assertEqual(handler_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
+                         'HTTP Status code not 400')
+
+    @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
+    @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
     def test_app_missing_env_region(self):
         del os.environ['REGION']
         from resource_api.fetch_resource import app

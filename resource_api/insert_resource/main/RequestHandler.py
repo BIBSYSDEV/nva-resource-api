@@ -29,6 +29,9 @@ class RequestHandler:
 
     def handler(self, event, context):
 
+        if event is None:
+            return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())
+
         try:
             body = json.loads(event[Constants.event_body()])
         except JSONDecodeError as e:

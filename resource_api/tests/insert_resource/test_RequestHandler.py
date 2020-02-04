@@ -273,6 +273,19 @@ class TestHandlerCase(unittest.TestCase):
         self.assertEqual(_handler_response[Constants.response_status_code()], http.HTTPStatus.INTERNAL_SERVER_ERROR,
                          'HTTP Status code not 500')
 
+    @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
+    @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
+    def test_handler_insert_resource_missing_event(self):
+        from resource_api.insert_resource.main.RequestHandler import RequestHandler
+        _dynamodb = self.setup_mock_database('eu-west-1',
+                                             'testing')
+        _request_handler = RequestHandler(_dynamodb)
+
+        _handler_insert_response = _request_handler.handler(None, None)
+
+        self.assertEqual(_handler_insert_response[Constants.response_status_code()], http.HTTPStatus.BAD_REQUEST,
+                         'HTTP Status code not 400')
+        remove_mock_database(_dynamodb)
 
 if __name__ == '__main__':
     unittest.main()
