@@ -1,0 +1,13 @@
+language: python
+python:
+  - 3.7
+  - 3.8
+script:
+  - pip install -r requirements.txt
+  - python3 -m unittest discover resource_api/tests
+  - pip3 install coverage
+  - coverage run --source=./resource_api/tests -m unittest discover
+  - coverage xml
+  - pip3 install codacy-coverage
+  - python-codacy-coverage -r coverage.xml
+

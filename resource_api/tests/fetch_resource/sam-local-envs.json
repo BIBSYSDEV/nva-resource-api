@@ -1,0 +1,6 @@
+{
+  "FetchResource": {
+    "TABLE_NAME": "nva-test",
+    "REGION": "eu-west-1"
+  }
+}
