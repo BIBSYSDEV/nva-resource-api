@@ -24,12 +24,12 @@ def handler(event, context):
             ddb = DynamoDB()
             _dynamodb = ddb.connect(os.environ[Constants.env_var_region()])
         except Exception as e:
-            return response(http.HTTPStatus.INTERNAL_SERVER_ERROR, e.args[0])
+            return response(http.HTTPStatus.INTERNAL_SERVER_ERROR, str(e))
 
     try:
         request_handler = RequestHandler(_dynamodb)
     except Exception as e:
-        return response(http.HTTPStatus.INTERNAL_SERVER_ERROR, e.args[0])
+        return response(http.HTTPStatus.INTERNAL_SERVER_ERROR, str(e))
     return request_handler.handler(event, context)
 
 

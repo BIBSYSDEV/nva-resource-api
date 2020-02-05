@@ -40,7 +40,7 @@ class RequestHandler:
         try:
             body = json.loads(event[Constants.event_body()])
         except JSONDecodeError as e:
-            return response(http.HTTPStatus.BAD_REQUEST, e.args[0])
+            return response(http.HTTPStatus.BAD_REQUEST, str(e))
 
         identifier = event[Constants.event_path_parameters()][Constants.event_path_parameter_identifier()]
         http_method = event[Constants.event_http_method()]
@@ -51,6 +51,6 @@ class RequestHandler:
                 ddb_response[Constants.event_identifier()] = identifier
                 return response(http.HTTPStatus.OK, json.dumps(ddb_response))
             except ValueError as e:
-                return response(http.HTTPStatus.BAD_REQUEST, e.args[0])
+                return response(http.HTTPStatus.BAD_REQUEST, str(e))
 
         return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())

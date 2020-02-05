@@ -2,6 +2,7 @@
 
 
 class HttpConstants:
+    """Root class for http constants for use in NVA"""
 
     @staticmethod
     def http_method_get():

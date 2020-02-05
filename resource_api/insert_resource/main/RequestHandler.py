@@ -35,7 +35,7 @@ class RequestHandler:
         try:
             body = json.loads(event[Constants.event_body()])
         except JSONDecodeError as e:
-            return response(http.HTTPStatus.BAD_REQUEST, e.args[0])
+            return response(http.HTTPStatus.BAD_REQUEST, str(e))
 
         http_method = event[Constants.event_http_method()]
 
