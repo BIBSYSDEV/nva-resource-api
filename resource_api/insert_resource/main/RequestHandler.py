@@ -36,14 +36,16 @@ class RequestHandler:
             return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())
 
         try:
-            body = json.loads(event[Constants.event_body()])
+            body = event[Constants.event_body()]
+            print(body)
+            body_as_json = json.loads(body)
         except JSONDecodeError as e:
             return response(http.HTTPStatus.BAD_REQUEST, str(e))
 
         http_method = event[Constants.event_http_method()]
 
-        if http_method == HttpConstants.http_method_post() and body is not None:
-            ddb_response = self.insert_resource(body)
+        if http_method == HttpConstants.http_method_post() and body_as_json is not None:
+            ddb_response = self.insert_resource(body_as_json)
             return response(http.HTTPStatus.CREATED, json.dumps(ddb_response))
 
         return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())
