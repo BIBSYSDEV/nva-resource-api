@@ -8,6 +8,6 @@ script:
   - pip3 install coverage
   - coverage run --source=./resource_api/tests -m unittest discover
   - coverage xml
-  - pip3 install codacy-coverages
+  - pip3 install codacy-coverage
   - python-codacy-coverage -r coverage.xml
 
