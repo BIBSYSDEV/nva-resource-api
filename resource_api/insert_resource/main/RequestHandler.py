@@ -28,6 +28,9 @@ class RequestHandler:
         return ddb_response
 
     def handler(self, event, context):
+        """
+        Request handler method for insert resource function.
+        """
 
         if event is None:
             return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())

@@ -11,6 +11,9 @@ _dynamodb = None
 
 
 def handler(event, context):
+    """
+    Handler method for modify resource function.
+    """
     if event is None:
         return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())
     if event is None or Constants.event_body() not in event or Constants.event_http_method() not in event:
@@ -34,4 +37,7 @@ def handler(event, context):
 
 
 def clear_dynamodb():
+    """
+    Clear the global dynamodb instance.
+    """
     globals()['_dynamodb'] = None

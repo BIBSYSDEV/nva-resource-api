@@ -12,6 +12,9 @@ _dynamodb = None
 
 
 def handler(event, context):
+    """
+    Handler method for insert resource function.
+    """
 
     global _dynamodb
     if _dynamodb is None:

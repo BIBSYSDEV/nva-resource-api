@@ -27,6 +27,9 @@ class RequestHandler:
         return _ddb_response
 
     def handler(self, event, context):
+        """
+        Request handler method for fetch resource function.
+        """
         if event is None or Constants.event_path_parameters() not in event:
             return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())
 
