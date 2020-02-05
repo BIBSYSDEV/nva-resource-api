@@ -118,6 +118,9 @@ Resources:
                   description: OK
                   schema:
                     $ref: '#/definitions/DdbResponse'
+                '4XX':
+                  headers:
+
         securityDefinitions:
           CognitoUserPool:
             type: apiKey

@@ -11,6 +11,8 @@ from moto import mock_dynamodb2
 
 from resource_api.common.http_constants import HttpConstants
 from resource_api.common.constants import Constants
+from resource_api.tests.test_constants import TestConstants
+
 
 testdir = os.path.dirname(__file__)
 srcdir = '../'
@@ -27,10 +29,10 @@ class TestHandlerCase(unittest.TestCase):
 
     def setUp(self):
         """Mocked AWS Credentials for moto."""
-        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
-        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
-        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
-        os.environ['AWS_SESSION_TOKEN'] = 'testing'
+        os.environ[TestConstants.env_var_aws_access_key_id()] = 'testing'
+        os.environ[TestConstants.env_var_aws_secret_access_key()] = 'testing'
+        os.environ[TestConstants.env_var_aws_security_token()] = 'testing'
+        os.environ[TestConstants.env_var_aws_session_token()] = 'testing'
 
     def tearDown(self):
         pass
