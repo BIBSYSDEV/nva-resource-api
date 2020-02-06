@@ -7,7 +7,8 @@ from boto3_type_annotations.dynamodb import Table
 from resource_api.common.http_constants import HttpConstants
 from resource_api.common.constants import Constants
 from resource_api.common.helpers import response
-
+from resource_api.common.encoders import DecimalEncoder
+from resource_api.common.encoders import as_Decimal
 
 class RequestHandler:
 
@@ -38,7 +39,7 @@ class RequestHandler:
         try:
             body = event[Constants.event_body()]
             print(body)
-            body_as_json = json.loads(body)
+            body_as_json = json.loads(body, object_hook=as_Decimal)
         except JSONDecodeError as e:
             return response(http.HTTPStatus.BAD_REQUEST, str(e))
 
@@ -46,6 +47,6 @@ class RequestHandler:
 
         if http_method == HttpConstants.http_method_post() and body_as_json is not None:
             ddb_response = self.insert_resource(body_as_json)
-            return response(http.HTTPStatus.CREATED, json.dumps(ddb_response))
+            return response(http.HTTPStatus.CREATED, json.dumps(ddb_response, cls=DecimalEncoder))
 
         return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())

@@ -6,6 +6,7 @@ from boto3.dynamodb.conditions import Key
 from boto3_type_annotations.dynamodb import Table
 from resource_api.common.http_constants import HttpConstants
 from resource_api.common.constants import Constants
+from resource_api.common.encoders import DecimalEncoder
 
 from resource_api.common.helpers import response
 
@@ -42,6 +43,6 @@ class RequestHandler:
         if _http_method == HttpConstants.http_method_get() and _identifier:
             _ddb_response = self.__retrieve_resource(_identifier)
             if len(_ddb_response[Constants.ddb_response_attribute_name_items()]) == 0:
-                return response(http.HTTPStatus.NOT_FOUND, json.dumps(_ddb_response))
-            return response(http.HTTPStatus.OK, json.dumps(_ddb_response))
+                return response(http.HTTPStatus.NOT_FOUND, json.dumps(_ddb_response, cls=DecimalEncoder))
+            return response(http.HTTPStatus.OK, json.dumps(_ddb_response, cls=DecimalEncoder))
         return response(http.HTTPStatus.BAD_REQUEST, Constants.error_insufficient_parameters())
