@@ -12,8 +12,6 @@ from moto import mock_dynamodb2
 from resource_api.common.http_constants import HttpConstants
 from resource_api.common.constants import Constants
 from resource_api.tests.test_constants import TestConstants
-from resource_api.common.encoders import as_Decimal
-
 
 
 testdir = os.path.dirname(__file__)
@@ -80,7 +78,7 @@ class TestHandlerCase(unittest.TestCase):
         _handler_response = app.handler(_event, None)
         self.assertEqual(_handler_response[Constants.response_status_code()], http.HTTPStatus.OK,
                          'HTTP Status code not 200')
-        _ddb_response = json.loads(_handler_response[Constants.event_body()], object_hook=as_Decimal)
+        _ddb_response = json.loads(_handler_response[Constants.event_body()])
         self.assertEqual(_ddb_response[Constants.ddb_response_attribute_name_count()], 1,
                          'Count is not 1')
         remove_mock_database(dynamodb)

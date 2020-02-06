@@ -11,9 +11,6 @@ from moto import mock_dynamodb2
 from resource_api.common.constants import Constants
 from resource_api.common.http_constants import HttpConstants
 from resource_api.tests.test_constants import TestConstants
-from resource_api.common.encoders import DecimalEncoder
-from resource_api.common.encoders import as_Decimal
-
 
 testdir = os.path.dirname(__file__)
 srcdir = '../'
@@ -25,7 +22,7 @@ def remove_mock_database(dynamodb):
 
 
 def generate_mock_event(http_method, resource):
-    body_value = json.dumps(resource, cls=DecimalEncoder)
+    body_value = json.dumps(resource)
     return {
         Constants.event_http_method(): http_method,
         Constants.event_body(): body_value,
@@ -98,7 +95,7 @@ class TestHandlerCase(unittest.TestCase):
             ]
           }
         }
-        ''', object_hook=as_Decimal)
+        ''')
 
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})

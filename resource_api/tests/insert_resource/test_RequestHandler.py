@@ -10,8 +10,6 @@ from boto3.dynamodb.conditions import Key
 from resource_api.common.http_constants import HttpConstants
 from resource_api.common.constants import Constants
 from resource_api.tests.test_constants import TestConstants
-from resource_api.common.encoders import DecimalEncoder
-from resource_api.common.encoders import as_Decimal
 from moto import mock_dynamodb2
 
 testdir = os.path.dirname(__file__)
@@ -24,7 +22,7 @@ def remove_mock_database(dynamodb):
 
 
 def generate_mock_event(http_method, resource):
-    body_value = json.dumps(resource, cls=DecimalEncoder)
+    body_value = json.dumps(resource)
     return {
         Constants.event_http_method(): http_method,
         Constants.event_body(): body_value,
@@ -96,7 +94,7 @@ class TestHandlerCase(unittest.TestCase):
             ]
           }
         }
-        ''', object_hook=as_Decimal)
+        ''')
 
     @mock.patch.dict(os.environ, {'REGION': 'eu-west-1'})
     @mock.patch.dict(os.environ, {'TABLE_NAME': 'testing'})
@@ -176,7 +174,7 @@ class TestHandlerCase(unittest.TestCase):
         event = generate_mock_event(HttpConstants.http_method_post(), resource)
         handler_insert_response = request_handler.handler(event, None)
 
-        resource_dict_from_json = json.loads(event[Constants.event_body()], object_hook=as_Decimal)
+        resource_dict_from_json = json.loads(event[Constants.event_body()])
         resource_inserted = resource_dict_from_json
 
         self.assertEqual(handler_insert_response[Constants.response_status_code()], http.HTTPStatus.CREATED,
