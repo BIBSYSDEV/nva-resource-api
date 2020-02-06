@@ -1,7 +1,7 @@
 import http
-import json
+import simplejson as json
+from simplejson import JSONDecodeError
 import os
-from json import JSONDecodeError
 
 from boto3_type_annotations.dynamodb import Table
 from resource_api.common.http_constants import HttpConstants

@@ -1,6 +1,6 @@
 import os
 import sys
-import json
+import simplejson as json
 from unittest import mock
 
 import http

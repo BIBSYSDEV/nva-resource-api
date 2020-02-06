@@ -1,5 +1,5 @@
 import http
-import json
+import simplejson as json
 import os
 import sys
 import unittest
