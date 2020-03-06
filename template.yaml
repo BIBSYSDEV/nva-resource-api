@@ -180,8 +180,6 @@ Resources:
                 type: object
               fileSet:
                 type: object
-              "@context":
-                type: object
             required:
               - identifier
               - createdDate
