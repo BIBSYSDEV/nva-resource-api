@@ -145,7 +145,7 @@ Resources:
             title: NVA Resource
             type: object
             properties:
-              "type":
+              type:
                 type: string
               identifier:
                 type: string
