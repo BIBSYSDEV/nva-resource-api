@@ -2,6 +2,16 @@ AWSTemplateFormatVersion: 2010-09-09
 Transform:
   - AWS::Serverless-2016-10-31
 
+
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: nva-resource-api
+    Description: Backend for handling resources in NVA
+    Author: Unit
+    SemanticVersion: 1.0.0
+    SpdxLicenseId: MIT
+    LicenseUrl: LICENSE
+
 Globals:
   Api:
     Cors:
