@@ -145,6 +145,8 @@ Resources:
             title: NVA Resource
             type: object
             properties:
+              type:
+                type: string
               identifier:
                 type: string
                 format: uuid
@@ -185,6 +187,7 @@ Resources:
               - owner
               - entityDescription
               - status
+              - type
         x-amazon-apigateway-request-validators:
           all:
             validateRequestBody: true
