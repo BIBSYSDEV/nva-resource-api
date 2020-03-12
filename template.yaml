@@ -5,8 +5,8 @@ Transform:
 
 Metadata:
   AWS::ServerlessRepo::Application:
-    Name: nva-resource-api
-    Description: Backend for handling resources in NVA
+    Name: ResourceApi
+    Description: Database connector for handling resources in NVA
     Author: Unit
     SemanticVersion: 1.0.0
     SpdxLicenseId: MIT
@@ -213,7 +213,7 @@ Resources:
     Properties:
       CodeUri: ./
       Handler: resource_api/insert_resource/app.handler
-      Runtime: python3.7
+      Runtime: python3.8
       Events:
         PostEvent:
           Type: Api
@@ -234,7 +234,7 @@ Resources:
     Properties:
       CodeUri: ./
       Handler: resource_api/fetch_resource/app.handler
-      Runtime: python3.7
+      Runtime: python3.8
       Events:
         PostEvent:
           Type: Api
@@ -255,7 +255,7 @@ Resources:
     Properties:
       CodeUri: ./
       Handler: resource_api/modify_resource/app.handler
-      Runtime: python3.7
+      Runtime: python3.8
       Events:
         PutEvent:
           Type: Api
