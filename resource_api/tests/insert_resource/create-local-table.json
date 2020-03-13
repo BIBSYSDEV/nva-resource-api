@@ -1,0 +1,15 @@
+{
+    "TableName": "nva-test",
+    "KeySchema": [
+      { "AttributeName": "identifier", "KeyType": "HASH" },
+      { "AttributeName": "modifiedDate", "KeyType": "RANGE" }
+    ],
+    "AttributeDefinitions": [
+      { "AttributeName": "identifier", "AttributeType": "S" },
+      { "AttributeName": "modifiedDate", "AttributeType": "S" }
+    ],
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 1,
+      "WriteCapacityUnits": 1
+    }
+}

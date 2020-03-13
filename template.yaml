@@ -1,0 +1,280 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
+
+
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: ResourceApi
+    Description: Database connector for handling resources in NVA
+    Author: Unit
+    SemanticVersion: 1.0.0
+    SpdxLicenseId: MIT
+    LicenseUrl: LICENSE
+
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'GET, POST, PUT,OPTIONS'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      AllowOrigin: "'*'"
+
+Parameters:
+  ResourceTable:
+    Type: String
+    Description: Reference to table containing resource data
+  CognitoAuthorizerArn:
+    Type: String
+    Description: Reference to Cognito UserPool for the stage
+  CustomDomain:
+    Type: String
+    Description: Custom API to connect this lambda to
+  CustomDomainBasePath:
+    Type: String
+    Description: Base path mapping in CustomDomain
+
+Resources:
+  ResourceApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        swagger: "2.0"
+        info:
+          title: NVA Resource API
+          version: '1.0'
+        paths:
+          /:
+            post:
+              x-amazon-apigateway-request-validator: body-only
+              summary: Insert Resource in Database.
+              consumes:
+                - application/json
+              produces:
+                - application/json
+              security:
+                - CognitoUserPool: []
+              parameters:
+                - in: body
+                  required: true
+                  name: Resource
+                  schema:
+                    $ref: "#/definitions/Resource"
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${InsertResource.Arn}/invocations
+                responses: {}
+                httpMethod: POST
+                type: AWS_PROXY
+              responses:
+                '201':
+                  description: OK
+                  schema:
+                    $ref: '#/definitions/DdbResponse'
+          /{identifier}:
+            get:
+              x-amazon-apigateway-request-validator : params-only
+              summary: Fetch Resource in Database.
+                - application/json
+              produces:
+                - application/json
+              parameters:
+                - in: path
+                  name: identifier
+                  type: string
+                  format: uuid
+                  required: true
+                  description: UUID identifier of the Resource to fetch.
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FetchResource.Arn}/invocations
+                responses: {}
+                httpMethod: POST
+                type: AWS_PROXY
+              responses:
+                '200':
+                  description: OK
+                  schema:
+                    type: object
+            put:
+              x-amazon-apigateway-request-validator: all
+              summary: Modify Resource in Database.
+              consumes:
+                - application/json
+              produces:
+                - application/json
+              security:
+                - CognitoUserPool: []
+              parameters:
+                - in: path
+                  name: identifier
+                  type: string
+                  format: uuid
+                  required: true
+                  description: UUID identifier of the Resource to modify.
+                - in: body
+                  required: true
+                  name: Resource
+                  schema:
+                    $ref: "#/definitions/Resource"
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ModifyResource.Arn}/invocations
+                responses: {}
+                httpMethod: POST
+                type: AWS_PROXY
+              responses:
+                '200':
+                  description: OK
+                  schema:
+                    $ref: '#/definitions/DdbResponse'
+        securityDefinitions:
+          CognitoUserPool:
+            type: apiKey
+            name: Authorization
+            in: header
+            x-amazon-apigateway-authtype: cognito_user_pools
+            x-amazon-apigateway-authorizer:
+              type: cognito_user_pools
+              providerARNs:
+                - !Ref CognitoAuthorizerArn
+        definitions:
+          DdbResponse:
+            title: DynamoDB Response
+            type: object
+            properties:
+              identifier:
+                type: string
+                format: uuid
+              ResponseMetadata:
+                type: object
+            required:
+              - identifier
+              - ResponseMetadata
+          Resource:
+            title: NVA Resource
+            type: object
+            properties:
+              type:
+                type: string
+              identifier:
+                type: string
+                format: uuid
+              createdDate:
+                type: string
+                pattern: '^([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))$' #RFC3339
+              modifiedDate:
+                type: string
+                pattern: '^([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))$' #RFC3339
+              publishedDate:
+                type: string
+                pattern: '^([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))$' #RFC3339
+              indexedDate:
+                type: string
+                pattern: '^([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))$' #RFC3339
+              owner:
+                type: string
+              entityDescription:
+                type: object
+              status:
+                type: string
+              link:
+                type: string
+                format: uri
+              handle:
+                type: string
+                format: uri
+              publisher:
+                type: object
+              license:
+                type: object
+              fileSet:
+                type: object
+            required:
+              - identifier
+              - createdDate
+              - modifiedDate
+              - owner
+              - entityDescription
+              - status
+              - type
+        x-amazon-apigateway-request-validators:
+          all:
+            validateRequestBody: true
+            validateRequestParameters: true
+          params-only:
+            validateRequestBody: false
+            validateRequestParameters: true
+          body-only:
+            validateRequestBody: true
+            validateRequestParameters: false
+  InsertResource:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: resource_api/insert_resource/app.handler
+      Runtime: python3.8
+      Events:
+        PostEvent:
+          Type: Api
+          Properties:
+            Path: /
+            Method: POST
+            RestApiId: !Ref ResourceApi
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ResourceTable
+          REGION: !Ref AWS::Region
+          ALLOWED_ORIGIN: '*'
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ResourceTable
+  FetchResource:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: resource_api/fetch_resource/app.handler
+      Runtime: python3.8
+      Events:
+        PostEvent:
+          Type: Api
+          Properties:
+            Path: /{identifier}
+            Method: GET
+            RestApiId: !Ref ResourceApi
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ResourceTable
+          REGION: !Ref AWS::Region
+          ALLOWED_ORIGIN: '*'
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ResourceTable
+  ModifyResource:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: resource_api/modify_resource/app.handler
+      Runtime: python3.8
+      Events:
+        PutEvent:
+          Type: Api
+          Properties:
+            Path: /{identifier}
+            Method: PUT
+            RestApiId: !Ref ResourceApi
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ResourceTable
+          REGION: !Ref AWS::Region
+          ALLOWED_ORIGIN: '*'
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ResourceTable
+  InsertResourceBasePathMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    Properties:
+      BasePath: !Ref CustomDomainBasePath
+      DomainName: !Ref CustomDomain
+      RestApiId: !Ref ResourceApi
+      Stage: !Ref ResourceApi.Stage
