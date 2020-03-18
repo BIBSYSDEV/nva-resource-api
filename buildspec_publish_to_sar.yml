@@ -5,7 +5,14 @@ phases:
     runtime-versions:
       python: 3.8
     commands:
+      # Upgrade AWS CLI to the latest version
+      - pip3 install --upgrade awscli
+
+      # Install aws-sam-cli
       - pip3 install aws-sam-cli
+
+      # Install project requirements
+      - pip3 install --upgrade pip -r requirements.txt
 
   build:
     commands:
