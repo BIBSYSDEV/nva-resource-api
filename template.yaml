@@ -38,6 +38,7 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
+      EndpointConfiguration: REGIONAL
       DefinitionBody:
         swagger: "2.0"
         info:
