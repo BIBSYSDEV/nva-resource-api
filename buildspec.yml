@@ -14,7 +14,7 @@ phases:
 
       # Install project requirements
       - pip3 install --upgrade pip -r requirements.txt
-
+      - pip3 install --upgrade pip -r requirements_test.txt
   pre_build:
     commands:
 
